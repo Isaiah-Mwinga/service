@@ -37,7 +37,39 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'api',
+    'mozilla_django_oidc',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# OpenID Connect settings
+OIDC_RP_CLIENT_ID = 'your_client_id'
+OIDC_RP_CLIENT_SECRET = 'your_client_secret'
+OIDC_OP_AUTHORIZATION_ENDPOINT = 'https://your-oidc-provider.com/authorize'
+OIDC_OP_TOKEN_ENDPOINT = 'https://your-oidc-provider.com/token'
+OIDC_OP_USER_ENDPOINT = 'https://your-oidc-provider.com/userinfo'
+OIDC_OP_JWKS_ENDPOINT = 'https://your-oidc-provider.com/jwks'
+OIDC_RP_SIGN_ALGO = 'RS256'
+
+# Redirect URIs for your OpenID Connect provider
+LOGIN_URL = '/oidc/authenticate/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+# Existing JWT and other settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,10 +107,23 @@ WSGI_APPLICATION = 'customer_orders.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'your_db_name',
+        'USER': 'your_db_user',
+        'PASSWORD': 'your_db_password',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+AFRICASTALKING_USERNAME = 'your_username'
+AFRICASTALKING_API_KEY = 'your_api_key'
 
 
 # Password validation
