@@ -6,5 +6,5 @@ sms = africastalking.SMS
 
 def send_order_alert(customer, order):
     message = f"Dear {customer.name}, your order for {order.item} has been placed successfully."
-    phone_number = 'customer_phone_number'  # Replace with actual phone number field
+    phone_number = '+254745101544'  # Replace with actual phone number field
     sms.send(message, [phone_number])
