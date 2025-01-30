@@ -1,26 +1,46 @@
-version: '3.8'
-services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: service
-  redis:
-    container_name: redis
-    hostname: redis
-    image: redis
-    ports:
-      - "6379:6379"
-    environment:
-      - REDIS_PASSWORD=your_password
-    command: [ "redis-server", "--requirepass", "your_password" ]
-    networks:
-      - fastapi_network
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
-  worker:
-    build: .
-    command: ["celery", "-A", "app.workers.celery_app", "worker", "--loglevel=info"]
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U user"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Set Environment Variables
+        run: echo "DATABASE_URL=postgresql://user:password@localhost:5432/test_db" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: pytest --maxfail=5 --disable-warnings
