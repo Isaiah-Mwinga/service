@@ -17,5 +17,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install pytest
+      # - name: Start services
+      #   run: |
+      #     docker-compose up -d
+
       - name: Run tests
-        run: pytest
+        run: |
+          pytest --maxfail=5 --disable-warnings
+
+           
