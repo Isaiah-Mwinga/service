@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: service
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=your_password
+    command: [ "redis-server", "--requirepass", "your_password" ]
+    networks:
+      - fastapi_network
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+  worker:
+    build: .
+    command: ["celery", "-A", "app.workers.celery_app", "worker", "--loglevel=info"]
