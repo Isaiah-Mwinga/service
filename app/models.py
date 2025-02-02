@@ -8,6 +8,7 @@ class Customer(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     code = Column(String, unique=True, index=True)
+    phone_number = Column(String, unique=True, index=True)  # Added phone number
 
 class Order(Base):
     __tablename__ = "orders"

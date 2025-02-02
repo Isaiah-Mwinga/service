@@ -14,3 +14,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  backend:
+    build: .
+    depends_on:
+      - localhost
+    environment:
+      DATABASE_URL: postgresql://postgres:root@localhost/service
+    command: >
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+

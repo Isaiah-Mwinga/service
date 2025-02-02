@@ -11,7 +11,7 @@ class CustomerCreate(CustomerBase):
 class Customer(CustomerBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class OrderBase(BaseModel):
     item: str
@@ -25,7 +25,7 @@ class Order(OrderBase):
     id: int
     customer: Customer
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
