@@ -1,9 +1,13 @@
-from fastapi import APIRouter, Depends
-from app.schemas import Token
-from app.dependencies import oauth2_scheme
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2AuthorizationCodeBearer
+from app.dependencies import get_current_user
 
 router = APIRouter()
 
-@router.get("/login", response_model=Token)
-def login(token: str = Depends(oauth2_scheme)):
-    return {"access_token": token, "token_type": "bearer"}
+@router.get("/userinfo")
+async def get_user_info(user: dict = Depends(get_current_user)):
+    """Fetch authenticated user details"""
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return user
+
