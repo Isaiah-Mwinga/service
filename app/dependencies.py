@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from app.database import SessionLocal
 import httpx
+
 # Load environment variables from a .env file
 from dotenv import load_dotenv
 import os
@@ -12,13 +13,16 @@ load_dotenv(dotenv_path)
 
 # OpenID Connect provider (e.g., Auth0, Google, Keycloak)
 OPENID_PROVIDER_URL = os.getenv("OPENID_PROVIDER_URL", "").strip("/")
-AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE", "https://dev-mxpkj7s8kou08yby.us.auth0.com/api/v2/")
+AUTH0_AUDIENCE = os.getenv(
+    "AUTH0_AUDIENCE", "https://dev-mxpkj7s8kou08yby.us.auth0.com/api/v2/"
+)
 USERINFO_URL = f"{OPENID_PROVIDER_URL}/userinfo"
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
     authorizationUrl=f"{OPENID_PROVIDER_URL}/authorize",
-    tokenUrl=f"{OPENID_PROVIDER_URL}/oauth/token"
+    tokenUrl=f"{OPENID_PROVIDER_URL}/oauth/token",
 )
+
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """Validate OpenID token and fetch user info"""
@@ -28,8 +32,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            USERINFO_URL,
-            headers={"Authorization": f"Bearer {token}"}
+            USERINFO_URL, headers={"Authorization": f"Bearer {token}"}
         )
 
     if response.status_code != 200:
@@ -41,7 +44,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=403, detail="Invalid user information")
 
     return user_info
-
 
 
 def get_db():

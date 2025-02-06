@@ -14,6 +14,7 @@ if not API_KEY:
 africastalking.initialize(USERNAME, API_KEY)
 sms = africastalking.SMS
 
+
 @celery.task(name="app.workers.tasks.send_sms")  # ✅ Explicitly register task
 def send_sms(phone_number: str, message: str):
     """Send an SMS notification to a customer asynchronously"""
@@ -25,7 +26,6 @@ def send_sms(phone_number: str, message: str):
         print(f"❌ Failed to send SMS: {str(e)}")
         return str(e)
 
+
 # ✅ Ensure Celery auto-imports tasks
 celery.autodiscover_tasks(["app.workers"])
-
-

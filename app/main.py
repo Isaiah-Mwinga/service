@@ -19,9 +19,9 @@ TOKEN_URL = f"{OPENID_PROVIDER_URL}/oauth/token"
 AUTH_URL = f"{OPENID_PROVIDER_URL}/authorize"
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=AUTH_URL,
-    tokenUrl=TOKEN_URL
+    authorizationUrl=AUTH_URL, tokenUrl=TOKEN_URL
 )
+
 
 # Fix Swagger UI Authentication
 def custom_openapi():
@@ -39,14 +39,15 @@ def custom_openapi():
                     "authorizationCode": {
                         "authorizationUrl": AUTH_URL,
                         "tokenUrl": TOKEN_URL,
-                        "scopes": {}
+                        "scopes": {},
                     }
-                }
+                },
             }
         }
         openapi_schema["security"] = [{"OAuth2": []}]
         app.openapi_schema = openapi_schema
     return app.openapi_schema
+
 
 app.openapi = custom_openapi
 
@@ -64,9 +65,11 @@ app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(customers.router, prefix="/customers", tags=["Customers"])
 app.include_router(orders.router, prefix="/orders", tags=["Orders"])
 
+
 @app.get("/")
 def root():
     return {"message": "Welcome to the Customer Order API"}
+
 
 # Ensure database is initialized
 database.Base.metadata.create_all(bind=database.engine)
