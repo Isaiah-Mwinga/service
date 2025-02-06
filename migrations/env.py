@@ -1,6 +1,4 @@
 from sqlalchemy import engine_from_config, pool
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 from alembic import context
 import os
 
