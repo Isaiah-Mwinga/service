@@ -40,4 +40,5 @@ start celery and make sure its connected to redis
 
 ### 🔹 **2. Add an image**
 
-![Sucess Message on Africastalking](C:\Users\imwinga\service\Screenshot 2025-02-05 214723.png)
+![Sucess Message on Africastalking]
+![alt text](<Screenshot 2025-02-05 214723.png>)
