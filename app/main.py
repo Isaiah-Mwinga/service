@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2AuthorizationCodeBearer
 import os
+
+import uvicorn
 from app import database
 from app.routes import customers, orders, auth
 from dotenv import load_dotenv
@@ -73,3 +75,7 @@ def root():
 
 # Ensure database is initialized
 database.Base.metadata.create_all(bind=database.engine)
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8000))  # Use Render's assigned PORT
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
