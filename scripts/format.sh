@@ -1,1 +1,1 @@
-./scripts/format.sh
+black .

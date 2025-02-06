@@ -1,1 +1,1 @@
-./scripts/lint.sh
+flake8 .
