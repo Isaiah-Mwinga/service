@@ -30,4 +30,14 @@ This project is a microservices-based API built with **FastAPI**, **PostgreSQL**
 ```sh
 git clone https://github.com/Isaiah-Mwinga/service.git
 cd your-repo
+create a virtual envronment
+Install your dependecies in requirements.txt
+Run the code from run.sh
 
+Start redis container if youre using docker
+start celery and make sure its connected to redis
+```
+
+### 🔹 **2. Add an image**
+
+![Sucess Message on Africastalking](C:\Users\imwinga\service\Screenshot 2025-02-05 214723.png)
