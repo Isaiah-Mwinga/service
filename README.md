@@ -1,6 +1,6 @@
-# 🚀 FastAPI Microservices - Customer Order API
+# 🚀 Python service - Customer Order API
 
-This project is a microservices-based API built with **FastAPI**, **PostgreSQL**, **Celery**, and **Auth0 OpenID Connect** for authentication. It handles customer orders, authentication, and asynchronous background tasks.
+This project is a services-based API built with **FastAPI**, **PostgreSQL**, **Celery**, and **Auth0 OpenID Connect** for authentication. It handles customer orders, authentication, and asynchronous background tasks.
 
 ---
 
