@@ -28,9 +28,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     """Validate OpenID token and fetch user info"""
 
     if not token:
-        raise HTTPException(
-            status_code=401, detail="No authentication token provided"
-        )
+        raise HTTPException(status_code=401, detail="No authentication token provided")
 
     async with httpx.AsyncClient() as client:
         response = await client.get(
@@ -38,9 +36,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
 
     if response.status_code != 200:
-        raise HTTPException(
-            status_code=401, detail="Invalid authentication token"
-        )
+        raise HTTPException(status_code=401, detail="Invalid authentication token")
 
     user_info = response.json()
 

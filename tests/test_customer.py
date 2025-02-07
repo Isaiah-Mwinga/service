@@ -71,9 +71,7 @@ def test_update_customer(mock_update_customer, test_customer):
 @patch("app.crud.delete_customer")
 def test_delete_customer(mock_delete_customer, test_customer):
     """Test deleting a customer."""
-    mock_delete_customer.return_value = {
-        "detail": "Customer deleted successfully"
-    }
+    mock_delete_customer.return_value = {"detail": "Customer deleted successfully"}
     response = client.delete(f"/customers/{test_customer.id}")
     assert response.status_code == 200
     assert response.json() in [

@@ -8,9 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get database URL from .env
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://postgres:root@localhost/service"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:root@localhost/service")
 
 # Import models
 from app.models import Base  # Ensure all models are imported

@@ -8,23 +8,15 @@ router = APIRouter()
 
 
 @router.post("/", response_model=schemas.Order)
-async def create_order(
-    order: schemas.OrderCreate, db: Session = Depends(get_db)
-):
+async def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
     """Create an order and send an SMS notification (No authentication required)"""
     new_order = crud.create_order(db, order)
 
     # Fetch the customer's phone number (assuming it's stored in the DB)
-    customer = (
-        db.query(crud.models.Customer).filter_by(id=order.customer_id).first()
-    )
-    if customer and hasattr(
-        customer, "phone_number"
-    ):  # Ensure phone number exists
+    customer = db.query(crud.models.Customer).filter_by(id=order.customer_id).first()
+    if customer and hasattr(customer, "phone_number"):  # Ensure phone number exists
         message = f"Hello {customer.name}, your order for {order.item} has been received. Amount: ${order.amount}."
-        send_sms.delay(
-            customer.phone_number, message
-        )  # Send SMS asynchronously
+        send_sms.delay(customer.phone_number, message)  # Send SMS asynchronously
 
     return new_order
 

@@ -90,9 +90,7 @@ def test_update_order(mock_update_order, test_order):
         "amount": test_order.amount,
         "time": test_order.time.isoformat(),
     }
-    response = client.put(
-        f"/orders/{test_order.id}", json={"item": "Gaming Laptop"}
-    )
+    response = client.put(f"/orders/{test_order.id}", json={"item": "Gaming Laptop"})
     assert response.status_code == 200
     assert response.json()["item"] == "Gaming Laptop"
 
