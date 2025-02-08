@@ -3,7 +3,7 @@ from app import models, schemas
 
 
 def create_customer(db: Session, customer: schemas.CustomerCreate):
-    db_customer = models.Customer(**customer.model_dump())  # ✅ Fix here
+    db_customer = models.Customer(**customer.model_dump())  
     db.add(db_customer)
     db.commit()
     db.refresh(db_customer)
@@ -26,7 +26,7 @@ def update_customer(
         return None
     for key, value in customer_update.model_dump(
         exclude_unset=True
-    ).items():  # ✅ Fix here
+    ).items():  
         setattr(customer, key, value)
     db.commit()
     db.refresh(customer)
