@@ -5,7 +5,7 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_DB: service
     ports:
       - "5432:5432"
@@ -28,8 +28,8 @@ services:
       redis:
         condition: service_started
     environment:
-      DATABASE_URL: postgresql://postgres:root@postgres/service
-      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
     command: >
       sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     ports:
@@ -41,7 +41,7 @@ services:
       - backend
       - redis
     environment:
-      DATABASE_URL: postgresql://postgres:root@postgres/service
-      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
     command: celery -A app.workers.celery_app worker --loglevel=info
 
