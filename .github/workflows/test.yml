@@ -1,10 +1,10 @@
 name: Run Tests
 
-on: [push, pull_request]  # Runs on every push and PR
+on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # Use latest Ubuntu environment
+    runs-on: ubuntu-latest
 
     services:
       postgres:
@@ -28,12 +28,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Ensures the latest repo code is pulled
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"  # Adjust Python version as needed
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -42,12 +42,13 @@ jobs:
 
       - name: Create .env file
         run: |
+          touch .env
           echo "AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}" >> .env
           echo "AUTH0_API_AUDIENCE=${{ secrets.AUTH0_API_AUDIENCE }}" >> .env
           echo "AUTH0_ISSUER=${{ secrets.AUTH0_ISSUER }}" >> .env
           echo "AUTH0_ALGORITHMS=${{ secrets.AUTH0_ALGORITHMS }}" >> .env
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_USER=testuser" >> .env
+          echo "POSTGRES_PASSWORD=testpassword" >> .env
           echo "POSTGRES_DB=testdb" >> .env
           echo "POSTGRES_HOST=localhost" >> .env
           echo "POSTGRES_PORT=5432" >> .env
@@ -56,8 +57,25 @@ jobs:
           echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
           echo "AFRICASTALKING_USERNAME=${{ secrets.AFRICASTALKING_USERNAME }}" >> .env
 
+      - name: Load environment variables
+        run: |
+          export $(grep -v '^#' .env | xargs)
+
       - name: Run tests
         env:
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_API_AUDIENCE: ${{ secrets.AUTH0_API_AUDIENCE }}
+          AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
+          AUTH0_ALGORITHMS: ${{ secrets.AUTH0_ALGORITHMS }}
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          AFRICASTALKING_USERNAME: ${{ secrets.AFRICASTALKING_USERNAME }}
           DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/testdb
           REDIS_URL: redis://localhost:6379
         run: pytest --disable-warnings
