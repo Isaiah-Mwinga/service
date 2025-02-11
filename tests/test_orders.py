@@ -6,9 +6,11 @@ from app.routes.auth import get_current_user
 # Test client
 client = TestClient(app)
 
+
 # Mock authentication function
 def override_get_current_user():
     return {"sub": "123456", "name": "Test User"}
+
 
 # Override FastAPI dependency
 app.dependency_overrides[get_current_user] = override_get_current_user
@@ -18,7 +20,7 @@ app.dependency_overrides[get_current_user] = override_get_current_user
 def test_create_order(mock_create_order):
     """Test creating an order."""
     mock_create_order.return_value = {
-         "id": 1,
+        "id": 1,
         "item": "Laptop",
         "amount": 1000,
         "time": "2025-02-05T12:00:00",
@@ -42,7 +44,7 @@ def test_create_order(mock_create_order):
 def test_get_orders(mock_get_orders):
     """Test retrieving orders."""
     mock_get_orders.return_value = [
-                {
+        {
             "id": 1,
             "customer_id": 1,
             "item": "Laptop",
@@ -60,7 +62,7 @@ def test_get_orders(mock_get_orders):
 def test_get_order(mock_get_order):
     """Test retrieving a single order."""
     mock_get_order.return_value = {
-         "id": 1,
+        "id": 1,
         "customer_id": 1,
         "item": "Laptop",
         "amount": 1000,
@@ -88,6 +90,7 @@ def test_update_order(mock_update_order):
     )
     assert response.status_code == 200
     assert response.json()["item"] == "Updated Laptop"
+
 
 @patch("app.crud.delete_order")
 def test_delete_order(mock_delete_order):

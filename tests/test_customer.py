@@ -6,9 +6,11 @@ from app.routes.auth import get_current_user
 # Test client
 client = TestClient(app)
 
+
 # Mock authentication function
 def override_get_current_user():
     return {"sub": "123456", "name": "Test User"}
+
 
 # Override FastAPI dependency
 app.dependency_overrides[get_current_user] = override_get_current_user
