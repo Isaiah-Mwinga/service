@@ -14,10 +14,9 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:latest
         env:
           POSTGRES_USER: postgres
-          # Store the Postgres password as a GitHub secret named "POSTGRES_PASSWORD"
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: service
         ports:
@@ -29,7 +28,7 @@ jobs:
           --health-retries 5
 
       redis:
-        image: redis
+        image: redis:latest
         ports:
           - "6379:6379"
 
@@ -51,11 +50,43 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}" >> .env
+          echo "AUTH0_API_AUDIENCE=${{ secrets.AUTH0_API_AUDIENCE }}" >> .env
+          echo "AUTH0_ISSUER=${{ secrets.AUTH0_ISSUER }}" >> .env
+          echo "AUTH0_ALGORITHMS=${{ secrets.AUTH0_ALGORITHMS }}" >> .env
+          echo "POSTGRES_USER=postgres" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DB=service" >> .env
+          echo "POSTGRES_HOST=localhost" >> .env
+          echo "POSTGRES_PORT=5432" >> .env
+          echo "REDIS_HOST=localhost" >> .env
+          echo "REDIS_PORT=6379" >> .env
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+          echo "AFRICASTALKING_USERNAME=${{ secrets.AFRICASTALKING_USERNAME }}" >> .env
+
+      - name: Load environment variables
+        run: export $(grep -v '^#' .env | xargs)
+
       - name: Run tests with coverage
         env:
-          # Instead of hardcoding, store the full DATABASE_URL in GitHub secrets
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_API_AUDIENCE: ${{ secrets.AUTH0_API_AUDIENCE }}
+          AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
+          AUTH0_ALGORITHMS: ${{ secrets.AUTH0_ALGORITHMS }}
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: service
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          AFRICASTALKING_USERNAME: ${{ secrets.AFRICASTALKING_USERNAME }}
+          DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/service
+          REDIS_URL: redis://localhost:6379
         run: pytest --maxfail=5 --disable-warnings --cov=app
 
   lint:
@@ -79,6 +110,5 @@ jobs:
       - name: Run Black (format check)
         run: black --check .
 
-      # - name: Run Flake8 (linting)
-      #   run: flake8 . --max-line-length=79 --ignore=E203,W503
-
+      - name: Run Flake8 (linting)
+        run: flake8 . --max-line-length=79 --ignore=E203,W503
