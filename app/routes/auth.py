@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
-from app.dependencies import get_current_user
+from fastapi import Security
+from fastapi.security import SecurityScopes
+from app.dependencies import verify_token
 
-router = APIRouter()
 
-
-@router.get("/userinfo")
-async def get_user_info(user: dict = Depends(get_current_user)):
-    """Fetch authenticated user details"""
-    if not user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    return user
+async def get_current_user(
+    security_scopes: SecurityScopes, token: str = Security(verify_token.verify)
+):
+    """
+    Extracts and returns the decoded JWT payload if the token is valid.
+    """
+    return token  # This is the decoded JWT payload

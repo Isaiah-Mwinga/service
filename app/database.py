@@ -2,7 +2,6 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
-import os
 
 # Load environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
