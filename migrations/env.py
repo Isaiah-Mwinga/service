@@ -1,17 +1,20 @@
-from sqlalchemy import engine_from_config, pool
-from alembic import context
 import os
+
+from alembic import context
 
 # Load environment variables
 from dotenv import load_dotenv
+from sqlalchemy import engine_from_config, pool
+
+# Import models
+from app.models import Base  # Ensure all models are imported
 
 load_dotenv()
 
 # Get database URL from .env
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:root@localhost/service")
-
-# Import models
-from app.models import Base  # Ensure all models are imported
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgresql://postgres:root@localhost/service"
+)
 
 config = context.config
 config.set_main_option("sqlalchemy.url", DATABASE_URL)

@@ -8,7 +8,9 @@ API_KEY = os.getenv("AFRICASTALKING_API_KEY")
 
 # Ensure API_KEY is set
 if not API_KEY:
-    raise ValueError("❌ AFRICASTALKING_API_KEY is missing! Make sure it's set in .env")
+    raise ValueError(
+        "❌ AFRICASTALKING_API_KEY is missing! Make sure it's set in .env"
+    )
 
 # Initialize Africa's Talking
 africastalking.initialize(USERNAME, API_KEY)
