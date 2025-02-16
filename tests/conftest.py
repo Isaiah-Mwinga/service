@@ -4,7 +4,9 @@ import pytest
 from unittest.mock import patch
 
 # # Ensure the root directory is in the sys path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 os.environ.setdefault("AFRICASTALKING_API_KEY", "dummy_api_key")
 
 
@@ -18,7 +20,11 @@ def mock_auth():
 
 @pytest.fixture
 def test_customer_data():
-    return {"name": "John Doe", "code": "JD123", "phone_number": "+254712345678"}
+    return {
+        "name": "John Doe",
+        "code": "JD123",
+        "phone_number": "+254712345678",
+    }
 
 
 @pytest.fixture

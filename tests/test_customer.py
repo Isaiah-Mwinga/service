@@ -1,6 +1,5 @@
 from fastapi.testclient import TestClient
 from unittest.mock import patch
-import pytest
 from app.main import app
 from app.routes.auth import get_current_user
 
@@ -66,7 +65,9 @@ def test_update_customer(mock_update_customer, test_customer_data):
 @patch("app.crud.delete_customer")
 def test_delete_customer(mock_delete_customer):
     """Test deleting a customer."""
-    mock_delete_customer.return_value = {"detail": "Customer deleted successfully"}
+    mock_delete_customer.return_value = {
+        "detail": "Customer deleted successfully"
+    }
     response = client.delete("/customers/1")
 
     assert response.status_code == 200
