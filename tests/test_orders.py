@@ -15,9 +15,12 @@ def override_get_current_user():
 # Override FastAPI dependency
 app.dependency_overrides[get_current_user] = override_get_current_user
 
+
 @patch("app.routes.orders.send_sms.delay")  # Ensure correct path
 @patch("app.crud.create_order")
-def test_create_order(mock_create_order, mock_send_sms, sample_order, sample_order_payload):
+def test_create_order(
+    mock_create_order, mock_send_sms, sample_order, sample_order_payload
+):
     """Test creating an order."""
     mock_create_order.return_value = {
         **sample_order,
@@ -29,8 +32,6 @@ def test_create_order(mock_create_order, mock_send_sms, sample_order, sample_ord
     assert response.status_code == 200
     assert response.json()["item"] == "Laptop"
     assert response.json()["amount"] == 1000
-
-
 
 
 @patch("app.crud.get_orders")
