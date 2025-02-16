@@ -73,9 +73,7 @@ class VerifyToken:
     def _check_claims(self, payload, claim_name, expected_values):
         """Check if the token contains the required claims"""
         if claim_name not in payload:
-            raise UnauthorizedException(
-                f'No claim "{claim_name}" found in token'
-            )
+            raise UnauthorizedException(f'No claim "{claim_name}" found in token')
 
         payload_claim = payload[claim_name]
         if claim_name == "scope":
@@ -83,9 +81,7 @@ class VerifyToken:
 
         for value in expected_values:
             if value not in payload_claim:
-                raise UnauthorizedException(
-                    f'Missing "{claim_name}" scope: {value}'
-                )
+                raise UnauthorizedException(f'Missing "{claim_name}" scope: {value}')
 
 
 # ✅ Create a single instance of VerifyToken to reuse across routes

@@ -15,11 +15,7 @@ def get_customers(db: Session):
 
 
 def get_customer(db: Session, customer_id: int):
-    return (
-        db.query(models.Customer)
-        .filter(models.Customer.id == customer_id)
-        .first()
-    )
+    return db.query(models.Customer).filter(models.Customer.id == customer_id).first()
 
 
 def update_customer(
@@ -60,9 +56,7 @@ def get_order(db: Session, order_id: int):
     return db.query(models.Order).filter(models.Order.id == order_id).first()
 
 
-def update_order(
-    db: Session, order_id: int, order_update: schemas.OrderUpdate
-):
+def update_order(db: Session, order_id: int, order_update: schemas.OrderUpdate):
     order = get_order(db, order_id)
     if not order:
         return None
