@@ -108,7 +108,7 @@ jobs:
           pip install black flake8 
 
       - name: Run Black (format check)
-        run: black --check .
+        run:  black . --line-length=79 --check
 
       - name: Run Flake8 (linting)
-        run: flake8 . --ignore=E203,W501
+        run: flake8 . --ignore=E203,W501 --exclude=venv
