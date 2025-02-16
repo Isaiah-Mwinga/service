@@ -1,1 +1,1 @@
-flake8 .
+flake8 . --ignore=E203,W501 --exclude=venv
